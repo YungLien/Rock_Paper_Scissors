@@ -1,3 +1,6 @@
+let humanScore = 0;
+let computerScore = 0;
+
 function getComputerChoice() {
     let computerChoice = Math.floor(Math.random() * 3);
     if (computerChoice === 0) {
@@ -8,59 +11,48 @@ function getComputerChoice() {
         return 'paper';
     }
 }
+// delete the getHumanChoice() function
 
-function getHumanChoice() {
-    let humanChoice = parseInt(prompt('What do you choose? Type 0 for Rock, 1 for Paper or 2 for Scissors.')); //Convert the prompt input to an integer using parseInt()
-    if (humanChoice === 0) {
-        return 'rock';
-    } else if (humanChoice === 2) {
-        return 'scissors';
-    } else if (humanChoice === 1) {
-        return 'paper';
-    } else {
-        alert('Invalid choice Please enter 0, 1, or 2.')
-        return getHumanChoice(); // Ask for input again
-    }
-}
+// take the human choice as an argument and generate the computer's choice within the function.
+function playRound(humanChoice) {
+    const computerChoice = getComputerChoice();
+    const scoreDisplay = document.querySelector('#score');
+    const roundResult = document.querySelector('#roundResult');
+    const gameResult = document.querySelector('#gameResult');
 
-let humanScore = 0;
-let computerScore = 0;
-
-function playRound(humanChoice, computerChoice) {
     if (humanChoice === computerChoice) {
-        console.log(`It\'s a draw. Both chose ${computerChoice}`);
+        roundResult.textContent = `It\'s a draw. Both chose ${computerChoice}.`;
     } else if (
         (humanChoice === 'rock' && computerChoice === 'scissors') ||
         (humanChoice === 'scissors' && computerChoice === 'paper') ||
         (humanChoice === 'paper' && computerChoice === 'rock')
     ) {
         humanScore++;
-        console.log(`You win! ${humanChoice} beats ${computerChoice}`);
+        roundResult.textContent = `You win! ${humanChoice} beats ${computerChoice}.`;
     } else {
         computerScore++;
-        console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
+        roundResult.textContent = `You lose! ${computerChoice} beats ${humanChoice}.`;
+    }
+    scoreDisplay.textContent = `Score: Human ${humanScore} - Computer ${computerScore}`
+
+    if (humanScore === 5 || computerScore === 5) {
+        if (humanScore > computerScore) {
+            gameResult.textContent = `Congrats! You won the game with a score of ${humanScore} to ${computerScore}.`;
+        } else {
+            gameResult.textContent = `Sorry! You lost the game with a score of ${humanScore} to ${computerScore}.`;
+        }
+        // Disable buttons after game ends
+        document.querySelector('#rock').disabled = true;
+        document.querySelector('#paper').disabled = true;
+        document.querySelector('#scissors').disabled = true;
     }
 }
 
 
-function playGame() {
-    humanScore = 0;
-    computerScore = 0;
+// Event listeners for the buttons
+document.querySelector('#rock').addEventListener('click', () => playRound('rock'));
+document.querySelector('#paper').addEventListener('click', () => playRound('paper'));
+document.querySelector('#scissors').addEventListener('click', () => playRound('scissors'));
 
-    for (i = 1; i <= 5; i++) {
-        const humanSelection = getHumanChoice(); // calls the function to get player's choice and stores it in the variable.
-        const computerSelection = getComputerChoice(); // calls the function to get computer's choice and stores it in the variable.
-        playRound(humanSelection, computerSelection); //Calls the playRound(humanSelection, computerSelection) function with the player's and computer's choices as arguments.
-    }
 
-    if (humanScore > computerScore) {
-        console.log(`Congrat! You wom the game with a score of ${humanScore} to ${computerScore}`);
-    } else if (computerScore > humanScore) {
-        console.log(`Sorry! You lost the game with a score of ${humanScore} to ${computerScore}`);
-    } else {
-        console.log(`It's a tie! Both have a score of ${humanScore}`);
-    }
-}
-
-// Start the game
-playGame();
+//delete the playGame()funciton
